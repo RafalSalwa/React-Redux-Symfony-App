@@ -5,10 +5,10 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+public/uploads/avatars/*
+!public/uploads/avatars/.gitkeep
+public/uploads/photos/*
+!public/uploads/photos/.gitkeep
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
