@@ -32,27 +32,23 @@ final readonly class AWSS3 implements FileUploaderInterface
             return '';
         }
 
-        try {
-            $result = $this->s3Client->putObject(
-                [
-                    'Bucket' => $this->s3Bucket,
-                    'Key' => $filename,
-                    'Body'   => fopen($file->getPathname(), 'r'),
-                    'SourceFile' => $file,
-                ],
-            );
+        $result = $this->s3Client->putObject(
+            [
+                'Bucket' => $this->s3Bucket,
+                'Key' => $filename,
+                'Body' => fopen($file->getPathname(), 'r'),
+                'SourceFile' => $file,
+            ],
+        );
 
-            return $result['ObjectURL'];
-        } catch (Throwable $throwable) {
-            dd($throwable->getMessage(), $throwable->getTraceAsString());
-        }
+        return $result['ObjectURL'];
     }
 
     public function uploadMultiple(array $uploadedFiles, FileType $type, string $userIdentifier): array
     {
         $filesPaths = [];
         foreach ($uploadedFiles as $uploadedFile) {
-            $filename = md5(uniqid('', true)) . '.' . $uploadedFile->guessExtension();
+            $filename = md5(uniqid('', true)).'.'.$uploadedFile->guessExtension();
             $filePath = $this->upload($uploadedFile, $filename, $type, $userIdentifier);
             $filesPaths[] = $filePath;
         }
