@@ -16,7 +16,6 @@ const schema = yup.object().shape({
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const authUser = useSelector((state) => state.auth.authUser);
 
     const {
         register,
@@ -60,8 +59,6 @@ const Login = () => {
                 <p className="text-center mt-3">
                 <span>New on our platform? </span>
                 <Link to="/register"><span>Create an account</span></Link>
-                <a href="auth-register-basic.html">
-                </a>
             </p>
             </>
     );
