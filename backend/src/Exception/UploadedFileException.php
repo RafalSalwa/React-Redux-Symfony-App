@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
 use Exception;
 
-class UploadedFileException extends Exception
+final class UploadedFileException extends Exception
 {
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\FileUpload;
 
 use App\Enum\FileType;
@@ -9,42 +11,46 @@ use App\Service\Contracts\UserFilePathProviderInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-#[Autoconfigure(tags: ['file_uploader'])]
-final class Simple implements FileUploaderInterface, UserFilePathProviderInterface
-{
+use function mb_strlen;
+use function mb_strpos;
+use function mb_substr;
+use function md5;
+use function sprintf;
+use function uniqid;
 
+#[Autoconfigure(tags: ['file_uploader'])]
+final readonly class Simple implements FileUploaderInterface, UserFilePathProviderInterface
+{
     public function __construct(
         private string $avatarsDir,
         private string $photosDir,
     ) {
     }
 
-    /**
-     * @throws UploadedFileException when file processing fails on move() operation
-     */
+    /** @throws UploadedFileException when file processing fails on move() operation */
     public function upload(UploadedFile $file, string $filename, FileType $type, string $userIdentifier): string
     {
         $path = $this->getPath($type, $userIdentifier);
         $file->move($path, $filename);
 
-        $publicPos = strpos($path, 'public');
-        if ($publicPos !== false) {
-            $relativePath = substr($path, $publicPos + strlen('public'));
+        $publicPos = mb_strpos($path, 'public');
+        if (false !== $publicPos) {
+            $relativePath = mb_substr($path, $publicPos + mb_strlen('public'));
 
             return sprintf('%s/%s', $relativePath, $filename);
         }
 
-        return "";
+        return '';
     }
 
     public function uploadMultiple(
         array $uploadedFiles,
         FileType $type,
-        string $userIdentifier
+        string $userIdentifier,
     ): array {
         $filesPaths = [];
         foreach ($uploadedFiles as $uploadedFile) {
-            $filename = md5(uniqid('', true)).'.'.$uploadedFile->guessExtension();
+            $filename = md5(uniqid('', true)) . '.' . $uploadedFile->guessExtension();
             $filesPaths[] = $this->upload($uploadedFile, $filename, $type, $userIdentifier);
         }
 
@@ -58,6 +64,6 @@ final class Simple implements FileUploaderInterface, UserFilePathProviderInterfa
             FileType::Photo => $this->photosDir,
         };
 
-        return sprintf("%s/%s", $dir, $userIdentifier);
+        return sprintf('%s/%s', $dir, $userIdentifier);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -14,7 +16,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
+
+use function array_unique;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: 'email', message: 'This email address is already used')]
@@ -26,9 +29,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180, unique: true, nullable: false)]
     #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column(length: 25)]
     #[Assert\NotBlank(message: 'firstName should not be blank.')]
@@ -36,7 +39,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         min: 2,
         max: 25,
         minMessage: 'First name must be at least {{ limit }} characters long',
-        maxMessage: 'First name cannot be longer than {{ limit }} characters')]
+        maxMessage: 'First name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 25)]
@@ -45,7 +49,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         min: 2,
         max: 25,
         minMessage: 'Last name must be at least {{ limit }} characters long',
-        maxMessage: 'Last name cannot be longer than {{ limit }} characters')]
+        maxMessage: 'Last name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 51)]
@@ -54,24 +59,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(length: 60)]
+    #[ORM\Column(length: 60, nullable: false)]
     #[Assert\NotBlank(message: 'Password should not be blank.')]
     #[Assert\Length(
         min: 6,
         max: 50,
         minMessage: 'The password must be at least {{ limit }} characters long.',
-        maxMessage: 'Password cannot be longer than {{ limit }} characters.',)]
-    #[Assert\Regex(pattern: '/\d/', message: "Your password must contain at least one number")]
-    private ?string $password = null;
+        maxMessage: 'Password cannot be longer than {{ limit }} characters.',
+    )]
+    #[Assert\Regex(pattern: '/\d/', message: 'Your password must contain at least one number')]
+    private string $password;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isActive = true;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\NotBlank(message: 'Avatar should not be blank.')]
-    private ?string $avatar = "uploads/default/avatar.jpg";
+    private ?string $avatar = 'uploads/default/avatar.jpg';
 
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'user', cascade: ["persist"])]
+    /** @var Collection<int, Photo> */
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'user', cascade: ['persist'])]
     private Collection $photos;
 
     #[ORM\Column(type: Types::GUID)]
@@ -85,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function __construct()
     {
-        $this->Uuid = Uuid::v4();
+        $this->Uuid = Uuid::v4()->toBinary();
         $this->photos = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
     }
@@ -95,7 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -114,24 +121,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return $this->email;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
+    /** @deprecated since Symfony 5.3, use getUserIdentifier instead */
     public function getUsername(): string
     {
-        return (string)$this->email;
+        return $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** @see UserInterface */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -144,9 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
+    /** @see PasswordAuthenticatedUserInterface */
     public function getPassword(): string
     {
         return $this->password;
@@ -170,9 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return null;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** @see UserInterface */
     public function eraseCredentials(): void
     {
     }
@@ -249,10 +247,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-
-    /**
-     * @return Collection<int, Photo>
-     */
+    /** @return Collection<int, Photo> */
     public function getPhotos(): Collection
     {
         return $this->photos;
@@ -260,7 +255,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function addPhoto(Photo $photo): static
     {
-        if (!$this->photos->contains($photo)) {
+        if (! $this->photos->contains($photo)) {
             $this->photos->add($photo);
             $photo->setUser($this);
         }
@@ -270,11 +265,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function removePhoto(Photo $photo): static
     {
-        if ($this->photos->removeElement($photo)) {
-            // set the owning side to null (unless already changed)
-            if ($photo->getUser() === $this) {
-                $photo->setUser(null);
-            }
+        if ($this->photos->removeElement($photo) && $photo->getUser() === $this) {
+            $photo->setUser(null);
         }
 
         return $this;
@@ -295,9 +287,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[ORM\PrePersist]
     public function prePersist(): void
     {
-        if (null === $this->getFullName()) {
-            $this->setFullName($this->getFirstName()." ".$this->getLastName());
+        if (null !== $this->getFullName()) {
+            return;
         }
+
+        $this->setFullName($this->getFirstName() . ' ' . $this->getLastName());
     }
 
     #[ORM\PreUpdate]

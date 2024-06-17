@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PhotoRepository;
@@ -28,7 +30,7 @@ class Photo implements JsonSerializable
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'photos')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'photos')]
     private ?User $user = null;
 
     public function __construct(string $name)

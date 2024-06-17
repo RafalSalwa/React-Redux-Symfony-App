@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Utils;
 
 use Symfony\Component\Form\FormInterface;
@@ -15,12 +17,16 @@ final class FormErrorExtractor
         }
 
         foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                $childErrors = self::getErrorsFromForm($childForm);
-                if (!empty($childErrors)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
+            if (! $childForm instanceof FormInterface) {
+                continue;
             }
+
+            $childErrors = self::getErrorsFromForm($childForm);
+            if ([] === $childErrors) {
+                continue;
+            }
+
+            $errors[$childForm->getName()] = $childErrors;
         }
 
         return $errors;

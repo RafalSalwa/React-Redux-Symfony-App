@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use App\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Throwable;
 
-readonly final class UserValidator
+use function count;
+
+final readonly class UserValidator
 {
     public function __construct(private ValidatorInterface $validator)
     {

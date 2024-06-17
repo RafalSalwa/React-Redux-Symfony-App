@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Service\UserService;
@@ -7,13 +9,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderI
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * @method UserInterface loadUserByIdentifierAndPayload(string $identifier, array $payload)
- */
-final class UserProvider implements UserProviderInterface, PayloadAwareUserProviderInterface
-{
+use function is_subclass_of;
 
-    public function __construct(private readonly UserService $userService)
+/** @method UserInterface loadUserByIdentifierAndPayload(string $identifier, array $payload) */
+final readonly class UserProvider implements UserProviderInterface, PayloadAwareUserProviderInterface
+{
+    public function __construct(private UserService $userService)
     {
     }
 
@@ -27,16 +28,16 @@ final class UserProvider implements UserProviderInterface, PayloadAwareUserProvi
         return is_subclass_of($class, UserInterface::class);
     }
 
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
         return $this->userService->findOne($identifier);
     }
 
-    public function loadUserByUsernameAndPayload(string $username, array $payload)
+    public function loadUserByUsernameAndPayload(string $username, array $payload): void
     {
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): ?UserInterface
     {
         return $this->userService->findOne($username);
     }

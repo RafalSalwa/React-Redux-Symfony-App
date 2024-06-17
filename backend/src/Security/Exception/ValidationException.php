@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Exception;
 
-class ValidationException extends \Exception
+use Exception;
+
+final class ValidationException extends Exception
 {
-    private array $errors;
+    private array $errors = [];
 
     public function withErrors(array $errors): void
     {
