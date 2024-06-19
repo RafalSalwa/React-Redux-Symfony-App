@@ -2,6 +2,5 @@ vendor
 node_modules
 .dockerignore
 docker-compose.yml
-tests
 .git
 .gitignore
