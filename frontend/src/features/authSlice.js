@@ -43,6 +43,7 @@ export const fetchUserAction = () => async (dispatch) => {
         dispatch(fetchUserSuccess(user));
     } catch (error) {
         dispatch(fetchUserFailure(error.message));
+        dispatch(logoutUserAction());
     }
 };
 
