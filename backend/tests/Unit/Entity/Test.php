@@ -78,8 +78,6 @@ final class Test extends TestCase
         $user->setFirstName('John');
         $user->setLastName('Doe');
 
-        $user->prePersist();
-
         $this->assertSame('John Doe', $user->getFullName());
     }
 

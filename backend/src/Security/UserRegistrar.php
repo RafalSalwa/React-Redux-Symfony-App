@@ -46,6 +46,10 @@ final readonly class UserRegistrar implements UserRegistrarInterface
         assert($user instanceof User);
 
         $user->setEmail($this->cryptonService->encrypt($user->getEmail()));
+
+        $fullName = $user->getFirstName() . ' ' . $user->getLastName();
+        $user->setFullName($this->cryptonService->encrypt($fullName));
+
         $user->setFirstName($this->cryptonService->encrypt($user->getFirstName()));
         $user->setLastName($this->cryptonService->encrypt($user->getLastName()));
 

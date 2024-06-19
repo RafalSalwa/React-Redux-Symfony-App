@@ -78,10 +78,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     private ?string $avatar = 'uploads/default/avatar.jpg';
 
     /** @var Collection<int, Photo> */
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $photos;
 
-    #[ORM\Column(type: Types::GUID)]
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     private string $Uuid;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
@@ -92,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function __construct()
     {
-        $this->Uuid = Uuid::v4()->toBinary();
+        $this->Uuid = Uuid::v4()->toRfc4122();
         $this->photos = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
     }
@@ -255,7 +255,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function addPhoto(Photo $photo): static
     {
-        if (! $this->photos->contains($photo)) {
+        if (!$this->photos->contains($photo)) {
             $this->photos->add($photo);
             $photo->setUser($this);
         }
@@ -282,16 +282,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->fullName = $fullName;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersist(): void
-    {
-        if (null !== $this->getFullName()) {
-            return;
-        }
-
-        $this->setFullName($this->getFirstName() . ' ' . $this->getLastName());
     }
 
     #[ORM\PreUpdate]

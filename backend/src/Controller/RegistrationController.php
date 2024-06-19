@@ -55,7 +55,7 @@ final class RegistrationController extends AbstractController
                     Response::HTTP_BAD_REQUEST,
                 );
             } catch (AuthenticationExceptionInterface | UploadedFileException $exception) {
-                return $this->json(['errors' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+                return $this->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
             }
         }
 
