@@ -19,6 +19,14 @@ Planning decisions:
 
 ## ⚙️ Installation
 ```bash
-make up
+make local
 ```
-visit 0.0.0.0:8001 or use Postman collection from [docs/](docs/)
+Tests:
+```bash
+make tests_unit
+```
+SAST:
+```bash
+make static_analysis
+```
+visit 0.0.0.0:8000 or use Postman collection from [docs/](docs/)
