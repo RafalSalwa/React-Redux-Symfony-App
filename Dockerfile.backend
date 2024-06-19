@@ -1,0 +1,20 @@
+FROM php:8.2-fpm
+ENV TZ=Europe/Warsaw
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+COPY ./backend /var/www/backend
+WORKDIR /var/www/backend
+
+RUN apt update && apt install -y --no-install-recommends cmake libzip-dev git zip unzip \
+    && docker-php-ext-install pdo pdo_mysql opcache sysvsem sockets zip \
+    && usermod -u 1000 www-data \
+    && apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/ \
+    && ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone \
+    && printf '[PHP]\ndate.timezone = "%s"\n', ${TZ} > /usr/local/etc/php/conf.d/tzone.ini \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && rm -rf /var/www/backend/vendor ||true && rm -rf /var/www/backend/var/{cache,log,reports} \
+    && composer install --no-dev --no-scripts --optimize-autoloader --classmap-authoritative --no-progress \
+    && /var/www/backend/bin/console cache:warmup --env=prod && chmod -R 777 /var/www/backend/var/ \
+    && chmod 644 /var/www/backend/config/jwt/private.pem
+
+CMD ["php-fpm"]
