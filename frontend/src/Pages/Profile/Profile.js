@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
 import {useSelector} from "react-redux";
-import {MDBCarousel, MDBCarouselItem} from 'mdb-react-ui-kit';
 import Slider from 'react-slick';
 import CdnUtils from '../../Utils/Cdn'
 
@@ -22,7 +21,7 @@ const Profile = () => {
         ref: slider => (slider1.current = slider),
         arrows: false,
         slidesToShow: 1,
-        slidesToScroll: 3,
+        slidesToScroll: 1,
         lazyLoad: true,
         centerPadding: "200px",
         centerMode: true,

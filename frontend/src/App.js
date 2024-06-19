@@ -28,8 +28,8 @@ const App = () => {
                     <div className="App">
                         <main>
                             <Routes>
-                                <Route path="/" element={authUser ? <Navigate to="/profile" /> : <Login />} />
                                 <Route element={<AuthLayout />}>
+                                    <Route path="/" element={authUser ? <Navigate to="/profile" /> : <Login />} />
                                     <Route path="/register" element={authUser ? <Navigate to="/profile" /> : <Registration />} />
                                     <Route path="/login" element={authUser ? <Navigate to="/profile" /> : <Login />} />
                                 </Route>

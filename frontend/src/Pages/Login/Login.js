@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,6 +16,7 @@ const schema = yup.object().shape({
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [error, setError] = useState(null);
 
     const {
         register,
@@ -29,13 +30,14 @@ const Login = () => {
         try {
             const response = await loginUser(data);
             if (response.status === StatusCodes.OK) {
-                dispatch(loginSuccess({}));
+                dispatch(loginSuccess());
                 dispatch(fetchUserAction());
 
                 navigate('/');
             }
         } catch (error) {
-            console.error(error);
+            setError(error.response.data.message);
+            console.error("login catch err:", error);
         }
     };
 
@@ -46,16 +48,17 @@ const Login = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email</label>
-                        <input id="email" {...register('email')} className="form-control" />
+                        <input id="email" {...register('email')} className="form-control" value="rafal@salwa.com.pl" />
                         {errors.email && <span className="text-danger">{errors.email.message}</span>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" id="password" {...register('password')} className="form-control" />
+                        <input type="password" id="password" {...register('password')} className="form-control" value="pirat1692" />
                         {errors.password && <span className="text-danger">{errors.password.message}</span>}
                     </div>
                     <button type="submit" className="btn btn-primary d-grid w-100">Login</button>
                 </form>
+                {error && <div className="alert alert-danger mt-3">{error}</div>}
                 <p className="text-center mt-3">
                 <span>New on our platform? </span>
                 <Link to="/register"><span>Create an account</span></Link>

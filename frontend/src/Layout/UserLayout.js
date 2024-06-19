@@ -4,10 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutUserAction } from '../features/authSlice';
 import CdnUtils from '../Utils/Cdn'
 
-import '../assets/vendor/libs/jquery/jquery'
-import '../assets/vendor/libs/popper/popper'
-import '../assets/js/main'
-
 const UserLayout = () => {
   const { loading, authUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -56,39 +52,9 @@ const UserLayout = () => {
                   {authUser && <span> {authUser.fullName || `${authUser.firstName} ${authUser.lastName}`}</span>}
                 </li>
                 <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a className="nav-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                     <div className="avatar avatar-online">
                     {authUser &&<img src={CdnUtils.getPhotoUrl(authUser.avatar)} alt="" className="w-px-40 h-auto rounded-circle" />}
                     </div>
-                  </a>
-                  <ul className="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        <div className="d-flex">
-                          <div className="flex-shrink-0 me-3">
-                            <div className="avatar avatar-online">
-                              <img src="../assets/img/avatars/1.png" alt="" className="w-px-40 h-auto rounded-circle" />
-                            </div>
-                          </div>
-                          <div className="flex-grow-1">
-                          {authUser && <span> {authUser.fullName || `${authUser.firstName} ${authUser.lastName}`}</span>}
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                    <Link className="dropdown-item" to="/profile">
-                        <i className="bx bx-user me-2"></i>
-                        <span className="align-middle">My Profile</span>
-                        </Link>
-                    </li>
-                    <li>
-                      <div className="dropdown-divider"></div>
-                    </li>
-                    <li>
-                    <button className="dropdown-item btn btn-link" onClick={handleLogout}>Logout</button>
-                    </li>
-                  </ul>
                 </li>
               </ul>
             </div>

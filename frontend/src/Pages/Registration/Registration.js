@@ -21,6 +21,7 @@ function Registration() {
     const navigate = useNavigate();
     const [filePreviews, setFilePreviews] = useState([]);
     const [fileNames, setFileNames] = useState([]);
+    const [error, setError] = useState(null);
 
     const {
         register,
@@ -48,7 +49,6 @@ function Registration() {
             names.push(file.name);
         });
         setFileNames(names);
-        setValue('photos', e.target.files);
     };
 
     const handleClearFiles = () => {
@@ -58,14 +58,13 @@ function Registration() {
     };
 
     const onSubmit = async data => {
-        console.log("onSubmit", data)
         try {
             const response = await registerUser(data);
             if (response.status === StatusCodes.CREATED) {
                 navigate('/login');
             }
         } catch (error) {
-            console.error("register error", error);
+            setError(error.response.data.message);
         }
     };
 
@@ -100,7 +99,7 @@ function Registration() {
                         type="file"
                         id="photos"
                         {...register('photos')}
-                        // onChange={handleFileChange}
+                        onChange={handleFileChange}
                         multiple
                         className="form-control"
                     />
@@ -127,6 +126,7 @@ function Registration() {
                         onClick={handleSubmit(onSubmit)}>Register
                 </button>
             </form>
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
             <p className="text-center mt-3">
                 <span>Already have an account? </span>
                 <Link to="/login"><span>Sign in instead</span></Link>
