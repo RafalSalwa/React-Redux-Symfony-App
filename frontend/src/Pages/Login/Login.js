@@ -48,12 +48,12 @@ const Login = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email</label>
-                        <input id="email" {...register('email')} className="form-control" value="rafal@salwa.com.pl" />
+                        <input id="email" {...register('email')} className="form-control"/>
                         {errors.email && <span className="text-danger">{errors.email.message}</span>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" id="password" {...register('password')} className="form-control" value="pirat1692" />
+                        <input type="password" id="password" {...register('password')} className="form-control" />
                         {errors.password && <span className="text-danger">{errors.password.message}</span>}
                     </div>
                     <button type="submit" className="btn btn-primary d-grid w-100">Login</button>
