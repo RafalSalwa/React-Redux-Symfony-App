@@ -5,7 +5,8 @@ up:
 down:
 	docker compose down
 
-local:
+dev_server:
+	composer install
 	symfony server:stop
 	docker compose up -d
 	symfony server:start -d --no-tls

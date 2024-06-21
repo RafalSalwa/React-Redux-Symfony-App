@@ -4,8 +4,8 @@ prod:
 
 .PHONY: dev_backend
 dev_backend:
-	cd backend/ && make local
+	cd backend/ && make dev_server
 
 .PHONY: dev_frontend
 dev_frontend:
-	cd frontend && npm start
+	cd frontend/ && make dev_server

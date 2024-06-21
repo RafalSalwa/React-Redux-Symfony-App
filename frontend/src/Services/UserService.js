@@ -1,7 +1,4 @@
-import {fetchUser, logoutUser} from "../services/api";
-
-export async function registration(data) {
-}
+import {fetchUser, logoutUser} from "./api";
 
 export async function login(data) {
 }
