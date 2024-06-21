@@ -31,9 +31,10 @@ security:
             pattern: ^/api
             stateless: true
             provider: app_user_provider
-            jwt: ~
+            jwt:
+              authenticator: app.custom_authenticator
             login_throttling:
-                max_attempts: 5
+                max_attempts: 10
                 interval: '5 minutes'
 
     access_control:

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class CustomAuthenticator extends JWTAuthenticator
+class CookieJWTAuthenticator extends JWTAuthenticator
 {
 
     public function supports(Request $request): bool

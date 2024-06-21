@@ -64,7 +64,7 @@ final class FormAuthenticator extends AbstractLoginFormAuthenticator
             new Cookie(
                 name: 'jwt_token',
                 value: $jwt,
-                expire: strtotime('+24 hour'),
+                expire: strtotime('+1 hour'),
                 path: '/',
                 httpOnly: false,
             ),

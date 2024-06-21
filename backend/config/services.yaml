@@ -22,3 +22,6 @@ services:
     App\Service\FileUploader:
       arguments:
         $uploaders: !tagged_iterator file_uploader
+    app.custom_authenticator:
+      class: App\Security\CookieJWTAuthenticator
+      parent: lexik_jwt_authentication.security.jwt_authenticator
