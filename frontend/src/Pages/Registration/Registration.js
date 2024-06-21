@@ -3,7 +3,7 @@ import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from "react-router-dom";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {registerUser} from '../../services/api';
+import {registerUser} from '../../Services/api';
 import {StatusCodes} from 'http-status-codes'
 
 const schema = yup.object().shape({

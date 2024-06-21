@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as yup from 'yup';
-import { loginUser } from '../../services/api';
+import { loginUser } from '../../Services/api';
 import { StatusCodes } from 'http-status-codes'
 import { loginSuccess, fetchUserAction } from '../../features/authSlice';
 
