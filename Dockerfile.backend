@@ -3,9 +3,10 @@ ENV TZ=Europe/Warsaw
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY ./backend /var/www/backend
+COPY ./docker/php/newsletter-sendout-cronjob /etc/cron.d/newsletter-sendout-cronjob
 WORKDIR /var/www/backend
 
-RUN apt update && apt install -y --no-install-recommends cmake libzip-dev git vim zip unzip supervisor nginx \
+RUN apt update && apt install -y --no-install-recommends cmake libzip-dev git vim zip unzip cron supervisor nginx \
     && docker-php-ext-install pdo pdo_mysql opcache sysvsem sockets zip \
     && usermod -u 1000 www-data \
     && apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/ \
@@ -15,7 +16,8 @@ RUN apt update && apt install -y --no-install-recommends cmake libzip-dev git vi
     && rm -rf /var/www/backend/vendor ||true && rm -rf /var/www/backend/var/{cache,log,reports} \
     && composer install --no-dev --no-scripts --optimize-autoloader --classmap-authoritative --no-progress \
     && /var/www/backend/bin/console cache:warmup --env=prod && chmod -R 777 /var/www/backend/var/ \
-    && chmod 644 /var/www/backend/config/jwt/private.pem
+    && chmod 644 /var/www/backend/config/jwt/private.pem \
+    && crontab /etc/cron.d/newsletter-sendout-cronjob
 
 COPY ./docker/nginx/backend_host.conf /etc/nginx/nginx.conf
 CMD ["/usr/bin/supervisord"]

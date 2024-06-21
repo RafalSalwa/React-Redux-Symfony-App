@@ -1,6 +1,7 @@
 .PHONY: prod
 prod:
 	docker compose up -d
+	docker compose logs -f
 
 .PHONY: dev_backend
 dev_backend:
