@@ -8,13 +8,13 @@ function Footer() {
                   © <script>
                     document.write(new Date().getFullYear())
 
-                  </script>2024, made with ❤️ by <a href="https://themeselection.com" target="_blank" className="footer-link fw-medium">ThemeSelection</a>
+                  </script>2024, Sneat template, made with ❤️ by <a href="https://themeselection.com" target="_blank" rel="noreferrer" className="footer-link fw-medium">ThemeSelection</a>
                 </div>
                 <div className="d-none d-lg-inline-block">
-                  <a href="https://themeselection.com/license/" className="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" className="footer-link me-4">More Themes</a>
-                  <a href="https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/" target="_blank" className="footer-link me-4">Documentation</a>
-                  <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank" className="footer-link">Support</a>
+                  <a href="https://themeselection.com/license/" className="footer-link me-4" target="_blank" rel="noreferrer">License</a>
+                  <a href="https://themeselection.com/" target="_blank" rel="noreferrer" className="footer-link me-4">More Themes</a>
+                  <a href="https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/" target="_blank" rel="noreferrer" className="footer-link me-4">Documentation</a>
+                  <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank" rel="noreferrer" className="footer-link">Support</a>
                 </div>
               </div>
             </footer>
